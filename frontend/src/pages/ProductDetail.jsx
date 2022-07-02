@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios';
 import { useReducer } from 'react';
 import { FETCH_FAIL, FETCH_PRODUCT, FETCH_SUCCESS, product_details_initialState, product_details_reducer } from '../store/productDetailsReducer';
@@ -7,17 +7,35 @@ import { Col, Row, ListGroup, ListGroupItem, Badge, Button } from 'react-bootstr
 import Rating from '../components/Rating';
 import { Helmet } from 'react-helmet-async';
 import AppLoader from '../components/AppLoader';
+import { useContext } from 'react';
+import { CART_ADD_ITEMS, Store } from '../context/Store';
 
 
 
 const ProductDetail = () => {
     const [{ loading, product, error }, dispatch] = useReducer(product_details_reducer, product_details_initialState)
     const { slug } = useParams();
+    const naviage = useNavigate();
 
     useEffect(() => {
         dispatch({ type: FETCH_PRODUCT });
-        axios.get(`http://localhost:5000/api/products/${slug}`).then(response => dispatch({ type: FETCH_SUCCESS, payload: response.data })).catch(err => dispatch({ type: FETCH_FAIL, payload: err.message }));
+        axios.get(`http://localhost:5000/api/products/slug/${slug}`).then(response => dispatch({ type: FETCH_SUCCESS, payload: response.data })).catch(err => dispatch({ type: FETCH_FAIL, payload: err.message }));
     }, [slug])
+
+   const {state, dispatch:ctxDispatch} = useContext(Store);
+   const {cart} = state;
+
+   const addToCartHandler = async ()=>{
+    const existingItem= cart.cartItems.find(x=>x._id===product._id)
+    const quantity = existingItem ? existingItem.quantity +1:1;
+    const {data} = await axios.get(`http://localhost:5000/api/products/${product._id}`)
+    if(data.countInStock < quantity){
+        window.alert('Sorry! Product is out of stock')
+        return;
+    }
+      ctxDispatch({type:CART_ADD_ITEMS, payload:{...product, quantity}})
+      naviage('/cart')
+    }
 
     if (loading) return <AppLoader message="Product Loading ..." />
     if (error) return <h2>Sorry, There was an error</h2>
@@ -69,7 +87,7 @@ const ProductDetail = () => {
                             <ListGroupItem>
                                 {product.countInStock > 0 &&
                                     <div className='d-grid'>
-                                        <Button variant='warning' >Add To Cart</Button>
+                                        <Button onClick={addToCartHandler} variant='warning' >Add To Cart</Button>
                                     </div>}
                             </ListGroupItem>
                         </ListGroup>

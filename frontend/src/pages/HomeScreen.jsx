@@ -6,21 +6,27 @@ import { FAIL, FETCH, products_initialState, product_reducer, SUCCESS } from '..
 import { Col, Row } from 'react-bootstrap';
 import { Helmet } from 'react-helmet-async';
 import AppLoader from '../components/AppLoader';
+import { toast } from 'react-toastify';
+
+
 
 
 
 const HomeScreen = () => {
     const [{ products, error, loading }, dispatch] = useReducer(product_reducer, products_initialState);
-
+   
 
     useEffect(() => {
         dispatch({ type: FETCH });
         axios.get("http://localhost:5000/api/products").then(response => {
             dispatch({ type: SUCCESS, payload: response.data.products })
-        }).catch(error => {
+            toast.success('Correct')
+            }).catch(error => {
             dispatch({ type: FAIL, payload: error.message })
         });
-    }, []);
+    }, [dispatch]);
+
+    
 
     if (loading) return <AppLoader message="Products Loading ..." />
 

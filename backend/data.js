@@ -1,26 +1,32 @@
+import bcrypt from 'bcrypt'
 const data = {
   users: [
     {
-      name: 'Basir',
-      email: 'admin@example.com',
+      name: 'Valery Guhena',
+      email: 'valeryghn10@gmail.com',
+      password:bcrypt.hashSync("Valery2021",10),
       isAdmin: true,
-      isSeller: true,
-      seller: {
-        name: 'Puma',
-        logo: '/images/logo1.png',
-        description: 'best seller',
-        rating: 4.5,
-        numReviews: 120,
-      },
+      // isSeller: true,
+      // seller: {
+      //   name: 'Puma',
+      //   logo: '/images/logo1.png',
+      //   description: 'best seller',
+      //   rating: 4.5,
+      //   numReviews: 120,
+      // },
     },
     {
       name: 'John',
       email: 'user@example.com',
+      password:bcrypt.hashSync('123456',10),
       isAdmin: false,
     },
   ],
+
+
   products: [
     {
+     
       name: 'Nike Slim Shirt',
       slug: 'Nike-Slim-Shirt',
       category: 'Shirts',
@@ -33,6 +39,7 @@ const data = {
       description: 'high quality product',
     },
     {
+      
       name: 'Adidas Fit Shirt',
       slug: 'Adidas-Fit-Shirt',
       category: 'Shirts',
@@ -45,6 +52,7 @@ const data = {
       description: 'high quality product',
     },
     {
+      
       name: 'Lacoste Free Shirt',
       slug: 'Lacoste-Free-Shirt',
       category: 'Shirts',
@@ -57,6 +65,7 @@ const data = {
       description: 'high quality product',
     },
     {
+     
       name: 'Nike Slim Pant',
       slug: 'Nike-Slim-Pant',
       category: 'Pants',
@@ -69,6 +78,7 @@ const data = {
       description: 'high quality product',
     },
     {
+      
       name: 'Puma Slim Pant',
       slug: 'Puma-Slim-Pant',
       category: 'Pants',
@@ -81,6 +91,7 @@ const data = {
       description: 'high quality product',
     },
     {
+      
       name: 'Adidas Fit Pant',
       slug: 'Adidas-Fit-Pant',
       category: 'Pants',
